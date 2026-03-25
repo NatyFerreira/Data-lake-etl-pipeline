@@ -20,10 +20,6 @@ python3 pipeline.py
 - `data/curated/hourly_temperature.json`
 - `data/curated/quality_report.json`
 
-
-Perfeito, Natalia — vou transformar tudo isso em uma **documentação oficial em inglês**, no estilo de um README técnico, elegante e profissional.  
-Fica pronto para entregar, publicar no GitHub ou apresentar em aula.
-
 ---
 
 # **Data Pipeline Documentation **
