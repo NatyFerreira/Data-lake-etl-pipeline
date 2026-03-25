@@ -1,0 +1,62 @@
+{
+  "warning_count": 47,
+  "high_temperature_count": 0,
+  "low_temperature_count": 108,
+  "missing_status_count": 0,
+  "examples": {
+    "warning": [
+      {
+        "event_id": 23,
+        "device_id": "sensor-002",
+        "timestamp": "2026-01-01T08:11:00",
+        "temperature_c": 22.05,
+        "humidity_pct": 46.61,
+        "status": "warning"
+      },
+      {
+        "event_id": 54,
+        "device_id": "sensor-002",
+        "timestamp": "2026-01-01T08:26:30",
+        "temperature_c": 23.05,
+        "humidity_pct": 52.7,
+        "status": "warning"
+      },
+      {
+        "event_id": 82,
+        "device_id": "sensor-008",
+        "timestamp": "2026-01-01T08:40:30",
+        "temperature_c": 24.11,
+        "humidity_pct": 55.44,
+        "status": "warning"
+      }
+    ],
+    "high_temperature": [],
+    "low_temperature": [
+      {
+        "event_id": 260,
+        "device_id": "sensor-011",
+        "timestamp": "2026-01-01T10:09:30",
+        "temperature_c": 14.81,
+        "humidity_pct": 48.45,
+        "status": "ok"
+      },
+      {
+        "event_id": 268,
+        "device_id": "sensor-017",
+        "timestamp": "2026-01-01T10:13:30",
+        "temperature_c": 14.52,
+        "humidity_pct": 47.09,
+        "status": "ok"
+      },
+      {
+        "event_id": 269,
+        "device_id": "sensor-009",
+        "timestamp": "2026-01-01T10:14:00",
+        "temperature_c": 14.78,
+        "humidity_pct": 46.9,
+        "status": "ok"
+      }
+    ],
+    "missing_status": []
+  }
+}

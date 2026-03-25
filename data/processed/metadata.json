@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-03-25T12:21:12.588865+01:00",
+  "sources": [
+    {
+      "name": "business.csv",
+      "format": "csv",
+      "records": 1500
+    },
+    {
+      "name": "sensor.json",
+      "format": "json",
+      "records": 1500
+    }
+  ],
+  "total_normalized_records": 3000,
+  "zones": [
+    "raw",
+    "processed",
+    "curated"
+  ]
+}
