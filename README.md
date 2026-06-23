@@ -1,143 +1,145 @@
-# Source code kit - Introduction à l'écosystème data
+# Data Lake ETL Pipeline
 
-## Contenu
-- `data/raw/business.csv` : données métier simulées
-- `data/raw/sensor.json` : données capteurs simulées
-- `pipeline.py` : pipeline d'exemple
-- `data/processed/` : sorties intermédiaires
-- `data/curated/` : sorties prêtes à être exploitées
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![License](https://img.shields.io/badge/License-Academic-lightgrey)
 
-## Lancer le pipeline
+End-to-end ETL pipeline implementing a three-zone data lake architecture (Raw → Processed → Curated) over two heterogeneous data sources (CSV and JSON).  
+Built as an introduction to data engineering fundamentals (Campus Numérique in the Alps — Data Engineer & AI, RNCP Level 7, 2026).
 
-```bash
-cd repo
-python3 pipeline.py
+---
+
+## Project Structure
+
+```
+Data-lake-etl-pipeline/
+├── pipeline.py                         # Full ETL pipeline (extract, transform, enrich, quality, aggregate)
+├── data/
+│   ├── raw/
+│   │   ├── business.csv                # Simulated business data (raw, unmodified)
+│   │   └── sensor.json                 # Simulated sensor data (raw, unmodified)
+│   ├── processed/
+│   │   ├── normalized_events.json      # Unified schema output (business + sensor merged)
+│   │   ├── metadata.json               # Pipeline execution metadata
+│   │   └── quality_report.json         # Data quality validation results
+│   └── curated/
+│       └── hourly_temperature.json     # Aggregated analytical output (ready for BI)
+└── README.md
 ```
 
-## Sorties générées
-- `data/processed/normalized_events.json`
-- `data/processed/metadata.json`
-- `data/curated/hourly_temperature.json`
-- `data/curated/quality_report.json`
-
 ---
 
-# **Data Pipeline Documentation **
+## Data Lake Architecture
 
-## **Overview**
-This project implements a complete data pipeline following modern data lake principles.  
-It processes two heterogeneous data sources (CSV and JSON), normalizes them into a unified schema, enriches the dataset with metadata, performs data quality checks, and produces analytical outputs ready for visualization or reporting.
+The pipeline follows a standard three-zone data lake pattern:
 
-The pipeline is structured into three zones:
-
-- **raw** – unmodified source data  
-- **processed** – cleaned, normalized, enriched data  
-- **curated** – final analytical datasets  
-
----
-
-## **1. Data Ingestion (Extract)**
-
-The pipeline begins by loading the raw files stored in the `data/raw` directory:
-
-- `load_business_csv()` reads **business.csv**
-- `load_sensor_json()` reads **sensor.json**
-
-At this stage, no transformation is applied.  
-The goal is simply to ingest the raw data exactly as it was received.
-
----
-
-## **2. Data Normalization (Transform)**
-
-Because the two sources have different formats and structures, I created two normalization functions:
-
-- `normalize_business()`
-- `normalize_sensor()`
-
-Both functions convert their respective inputs into a **common event schema**, including fields such as:
-
-- `event_time`
-- `entity_id`
-- `metric`
-- `value`
-- `unit`
-- `source`
-
-This unified structure allows the two datasets to be merged and processed consistently.
-
----
-
-## **3. Enrichment and Metadata**
-
-To ensure traceability and documentation of each pipeline execution, I generate a metadata file using `build_metadata()`.  
-This file includes:
-
-- processing timestamp (Europe/Paris timezone)
-- number of normalized records
-- list of input sources and their record counts
-- description of the data lake zones
-
-This enrichment step adds valuable context for auditing and reproducibility.
-
----
-
-## **4. Data Quality Checks**
-
-The function `build_quality_report()` performs several quality validations on the sensor data:
-
-- detection of events with status `"warning"`
-- identification of unusually high or low temperatures
-- detection of missing `status` fields
-- examples of problematic records
-
-The resulting `quality_report.json` is stored in the **processed** zone, as it represents cleaned and validated information.
-
----
-
-## **5. Data Lake Zones**
-
-The project follows the standard three‑zone data lake architecture:
-
-### **Raw Zone (`data/raw/`)**
-Contains the original files exactly as received:
-- `business.csv`
-- `sensor.json`
-
-### **Processed Zone (`data/processed/`)**
-Contains cleaned, normalized, and enriched datasets:
-- `normalized_events.json`
-- `metadata.json`
-- `quality_report.json`
-
-### **Curated Zone (`data/curated/`)**
-Contains final analytical products ready for BI or visualization:
-- `hourly_temperature.json`
+```
+data/raw/          ←  unmodified source files (business.csv, sensor.json)
+      │
+      ▼  Extract + Normalize
+data/processed/    ←  unified schema, metadata, quality report
+      │
+      ▼  Aggregate
+data/curated/      ←  analytical products ready for dashboards or reporting
+```
 
 This separation ensures clarity, reproducibility, and proper governance of the data lifecycle.
 
 ---
 
-## **6. Analytical Product (Curated Layer)**
+## Technology Stack
 
-The function `aggregate_hourly_temperature()` computes hourly averages of temperature readings.  
-The output is saved as:
-
-- `curated/hourly_temperature.json`
-
-This dataset is ready for dashboards, charts, or further analytical work.
+| Component | Technology |
+|-----------|------------|
+| Language | Python 3.11 |
+| Data formats | CSV, JSON |
+| Architecture | Three-zone data lake (Raw / Processed / Curated) |
+| Timezone handling | Europe/Paris (pytz) |
 
 ---
 
-## **Conclusion**
+## Installation
 
-Through this project, I implemented all essential components of a modern data pipeline:
+```bash
+git clone https://github.com/NatyFerreira/Data-lake-etl-pipeline.git
+cd Data-lake-etl-pipeline
+python3 pipeline.py
+```
 
-- ingestion of raw data  
-- normalization into a unified schema  
-- enrichment with metadata  
-- quality control and validation  
-- structured data lake zones  
-- creation of a curated analytical dataset  
+No additional dependencies beyond the Python standard library and pytz.
 
-The result is a clean, maintainable, and fully traceable mini data lake aligned with industry best practices.
+---
+
+## Pipeline Steps
+
+### 1. Ingestion (Extract)
+
+Loads raw files from `data/raw/` without applying any transformation:
+
+```python
+load_business_csv()   # reads business.csv
+load_sensor_json()    # reads sensor.json
+```
+
+### 2. Normalisation (Transform)
+
+Converts both sources into a common event schema:
+
+| Field | Description |
+|-------|-------------|
+| `event_time` | Timestamp of the event |
+| `entity_id` | Identifier of the entity (business unit or sensor) |
+| `metric` | Metric name |
+| `value` | Measured value |
+| `unit` | Unit of measurement |
+| `source` | Origin of the record (`business` or `sensor`) |
+
+The unified schema allows both datasets to be merged and processed consistently downstream.
+
+### 3. Enrichment & Metadata
+
+`build_metadata()` generates a traceability record per pipeline run:
+
+- Processing timestamp (Europe/Paris timezone)
+- Number of normalised records
+- List of input sources and record counts
+- Description of data lake zones
+
+### 4. Data Quality Checks
+
+`build_quality_report()` validates sensor data and flags:
+
+- Events with `status == "warning"`
+- Unusually high or low temperature readings
+- Records with missing `status` fields
+- Examples of problematic records
+
+Output: `data/processed/quality_report.json`
+
+### 5. Aggregation (Curated Layer)
+
+`aggregate_hourly_temperature()` computes hourly averages of temperature readings and saves the result to `data/curated/hourly_temperature.json` — ready for dashboards, visualisation tools, or further analysis.
+
+---
+
+## Outputs
+
+| File | Zone | Description |
+|------|------|-------------|
+| `normalized_events.json` | Processed | Unified schema — business + sensor events merged |
+| `metadata.json` | Processed | Pipeline execution metadata for traceability |
+| `quality_report.json` | Processed | Data quality validation results |
+| `hourly_temperature.json` | Curated | Hourly temperature aggregates (analytical output) |
+
+---
+
+## Author
+
+**Natália Helen Ferreira**  
+PhD in Biological Chemistry | Data Engineer & AI (RNCP Level 7, in progress)  
+[LinkedIn](https://linkedin.com/in/ferreiranh) · [GitHub](https://github.com/NatyFerreira)
+
+---
+
+## License
+
+Academic project — free to use for educational purposes.
